@@ -5,19 +5,35 @@ using board;
 using chess;
 using board.Enums;
 
-namespace Xadrez_console {
+namespace board {
     class BoardFunctions {
 
         public static void Show(Board board) {
             Piece piece;
+            Console.WriteLine("  _________________");
             for (int i = 0; i < board.lines; i++) {
+                Console.Write(8 - i + "| ");
                 for (int j = 0; j < board.rows; j++) {
                     piece = board.ShowPosition(i, j);
                     if (piece == null) Console.Write("- ");
-                    else Console.Write(piece.ToString() + " ");
+                    else {
+                        PrintPiece(piece);
+                        Console.Write(" ");
+                    }
+                    if (j == board.rows - 1) Console.Write("|");
                 }
                 Console.WriteLine();
             }
+            Console.WriteLine("  -----------------");
+            Console.WriteLine("   A B C D E F G H ");
+            Console.WriteLine();
+            Console.Write("Pretas: ");
+            board.ShowEated(board.BlackEated);
+            Console.WriteLine();
+            Console.Write("White: ");
+            board.ShowEated(board.WhiteEated);
+            Console.WriteLine();
+
         }
 
         public static void BuildBoard(Board board) {
@@ -64,6 +80,17 @@ namespace Xadrez_console {
                     Piece WhiteKing = new King(new Position(7, i), Color.White, board);
                     board.InsertPiece(WhiteKing);
                 }
+            }
+        }
+
+        static void PrintPiece(Piece piece) {
+            if (piece.color == Color.Black) {
+                ConsoleColor aux = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write(piece);
+                Console.ForegroundColor = aux;
+            } else {
+                Console.Write(piece);
             }
         }
     }
