@@ -38,15 +38,16 @@ namespace board {
 
         //Move a specific piece
         public void MovePiece(Piece p, Position position) {
+            bool[,] moves = p.PossibleMoves();
             if (IsAvaiable(p, position) == 0) {
                 piece[p.position.line, p.position.row] = null;
                 p.position = position;
                 this.InsertPiece(p);
                 p.numberOfMoves++;
             } else if (IsAvaiable(p, position) == 1) {
-                throw new PositionException("Position is not empty!");
-            } else {
                 EatPiece(p, position);
+            } else {
+                throw new PositionException("Position is not empty!");
             }
         }
 
@@ -59,9 +60,15 @@ namespace board {
 
         // Verify if a position is avaiable
         private int IsAvaiable(Piece piece, Position position) {
-            if (this.ShowPosition(position) == null) return 0;
-            else if (this.ShowPosition(position).color == piece.color) return 1;
-            else return 2;
+            bool[,] moves = piece.PossibleMoves();
+            if (moves[position.line, position.row]==true) {
+                if ( ShowPosition(position) != null && ShowPosition(position).color != piece.color)
+                    return 1;
+                else return 0;
+            } else {
+                return -1;
+            }
+
         }
 
         // Method invoqued when a piece is eated
@@ -72,14 +79,23 @@ namespace board {
                 WhiteEated.Add(aux);
             } else BlackEated.Add(aux);
             this.piece[position.line, position.row] = null;
-            MovePiece(p, position);
+            if (p is Pawn) PawnsEat(p, position);
+            else MovePiece(p, position);
         }
 
+        // Shows the pieces that where eated
         public void ShowEated(List<Piece> list) {
             foreach(Piece piece in list) {
-                Console.Write(piece);
+                Console.Write(piece + " ");
             }
+        }
 
+        // Method invoqued after a pawn eat a piece
+        private void PawnsEat(Piece p, Position position) {
+            piece[p.position.line, p.position.row] = null;
+            p.position = position;
+            this.InsertPiece(p);
+            p.numberOfMoves++;
         }
 
     }

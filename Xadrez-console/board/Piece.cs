@@ -16,6 +16,8 @@ namespace board {
                 numberOfMoves = 0;
         }
 
+        public abstract bool[,] PossibleMoves();
+
         
     }
 }

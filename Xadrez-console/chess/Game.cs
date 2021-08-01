@@ -9,12 +9,14 @@ namespace chess {
         public Board board { get; private set; }
         private int turn;
         private Color color;
+        public bool end { get; set; }
 
         public Game() {
             this.board = new Board();
             BoardFunctions.BuildBoard(board);
             turn = 1;
             color = Color.White;
+            end = true;
         }
 
         public void PlayTurn(Piece piece, Position position) {

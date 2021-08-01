@@ -13,7 +13,7 @@ namespace Xadrez_console {
 
 
             int i = 0;
-            while (i != 5) {
+            while (game.end) {
                 try {
                     Console.WriteLine();
                     Console.WriteLine(game);
@@ -58,6 +58,11 @@ namespace Xadrez_console {
 
                 }catch(PlayerException e) {
                     Console.WriteLine(e.Message);
+                    Thread.Sleep(3000);
+                    Console.Clear();
+                    BoardFunctions.Show(game.board);
+                }catch(NullReferenceException e) {
+                    Console.WriteLine("There's not a piece in that position!");
                     Thread.Sleep(3000);
                     Console.Clear();
                     BoardFunctions.Show(game.board);
