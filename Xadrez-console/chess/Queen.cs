@@ -81,7 +81,7 @@ namespace chess {
                 }
             }
             // Up
-            for (int i = base.position.line - 1; i > 0; i--) {
+            for (int i = base.position.line - 1; i >= 0; i--) {
                 if (board.ShowPosition(new Position(i, base.position.row)) == null)
                     moves[i, base.position.row] = true;
                 else if (board.ShowPosition(new Position(i, base.position.row)).color == base.color)
@@ -104,7 +104,7 @@ namespace chess {
             }
 
             // Left
-            for (int i = base.position.row - 1; i > 0; i--) {
+            for (int i = base.position.row - 1; i >= 0; i--) {
                 if (board.ShowPosition(new Position(base.position.line, i)) == null)
                     moves[base.position.line, i] = true;
                 else if (board.ShowPosition(new Position(base.position.line, i)).color == base.color)

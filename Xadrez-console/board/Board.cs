@@ -58,6 +58,20 @@ namespace board {
             else return;
         }
 
+        // Validates a position
+        public bool ValidatePosition(Position position) {
+            if (position.line < 0 || position.row < 0 || position.line > 7 || position.row > 7)
+                return false;
+            else return true;
+        }
+
+        // Overload of ValidatePosition
+        public bool ValidatePosition(int line, int row) {
+            if (line < 0 || row < 0 || line > 7 || row > 7)
+                return false;
+            else return true;
+        }
+
         // Verify if a position is avaiable
         private int IsAvaiable(Piece piece, Position position) {
             bool[,] moves = piece.PossibleMoves();

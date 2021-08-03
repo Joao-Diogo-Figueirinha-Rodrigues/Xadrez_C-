@@ -18,17 +18,19 @@ namespace Xadrez_console {
                     Console.WriteLine();
                     Console.WriteLine(game);
                     Console.Write("Introduza a peça a mover: ");
-                    string v = Console.ReadLine();
+                    string v = Console.ReadLine().ToUpper();  
                     string[] pos = v.Split(",");
 
-                    char row = char.Parse(pos[0]);
+                    char row = char.Parse(pos[0]) ;
                     int line = int.Parse(pos[1]);
 
                     ChessPosition cp = new ChessPosition(row, line);
                     Position firstPosition = cp.ToPosition();
+                    Console.Clear();
+                    BoardFunctions.Show(game.board, game.board.ShowPosition(firstPosition));
 
                     Console.Write("Introduza o movimento da peça: ");
-                    v = Console.ReadLine();
+                    v = Console.ReadLine().ToUpper();
                     pos = v.Split(",");
 
                     row = char.Parse(pos[0]);

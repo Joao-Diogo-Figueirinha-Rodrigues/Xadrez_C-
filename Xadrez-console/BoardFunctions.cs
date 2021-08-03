@@ -17,8 +17,7 @@ namespace board {
                     piece = board.ShowPosition(i, j);
                     if (piece == null) Console.Write("- ");
                     else {
-                        PrintPiece(piece);
-                        Console.Write(" ");
+                        PrintPiece(piece); // Possible improvement (aula 164)
                     }
                     if (j == board.rows - 1) Console.Write("|");
                 }
@@ -27,7 +26,48 @@ namespace board {
             Console.WriteLine("  -----------------");
             Console.WriteLine("   A B C D E F G H ");
             Console.WriteLine();
-            Console.Write("Pretas: ");
+            Console.Write("Black: ");
+            board.ShowEated(board.BlackEated);
+            Console.WriteLine();
+            Console.Write("White: ");
+            board.ShowEated(board.WhiteEated);
+            Console.WriteLine();
+
+        }
+        // Overload of Show
+        public static void Show(Board board, Piece p) {
+            bool[,] moves = p.PossibleMoves();
+            Piece piece;
+            ConsoleColor original = Console.BackgroundColor;
+            ConsoleColor changed = ConsoleColor.DarkGray;
+
+            Console.WriteLine("  _________________");
+            for (int i = 0; i < board.lines; i++) {
+                Console.Write(8 - i + "| ");
+                for (int j = 0; j < board.rows; j++) {
+                    // Change Color
+                    if (moves[i, j]) Console.BackgroundColor = changed;
+                    
+
+                    piece = board.ShowPosition(i, j);
+                    if (piece == null) Console.Write("- ");
+                    else {
+                        if (new Position(i, j).line == p.position.line &&
+                            new Position(i, j).row == p.position.row) {
+                            Console.BackgroundColor = ConsoleColor.DarkBlue;
+                            PrintPiece(piece);
+                            Console.BackgroundColor = original;
+                        } else PrintPiece(piece); // Possible improvement (aula 164)
+                    }
+                    Console.BackgroundColor = original;
+                    if (j == board.rows - 1) Console.Write("|");
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine("  -----------------");
+            Console.WriteLine("   A B C D E F G H ");
+            Console.WriteLine();
+            Console.Write("Black: ");
             board.ShowEated(board.BlackEated);
             Console.WriteLine();
             Console.Write("White: ");
@@ -53,10 +93,10 @@ namespace board {
                     board.InsertPiece(WhiteTower);
 
                 } else if (i == 1 || i == 6) {
-                    Piece blackHorseman = new Horseman(new Position(0, i), Color.Black, board);
+                    Piece blackHorseman = new Horse(new Position(0, i), Color.Black, board);
                     board.InsertPiece(blackHorseman);
 
-                    Piece WhiteHorseman = new Horseman(new Position(7, i), Color.White, board);
+                    Piece WhiteHorseman = new Horse(new Position(7, i), Color.White, board);
                     board.InsertPiece(WhiteHorseman);
 
                 } else if (i == 2 || i == 5) {
@@ -87,11 +127,12 @@ namespace board {
             if (piece.color == Color.Black) {
                 ConsoleColor aux = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write(piece);
+                Console.Write(piece + " ");
                 Console.ForegroundColor = aux;
             } else {
-                Console.Write(piece);
+                Console.Write(piece + " ");
             }
         }
+
     }
 }
