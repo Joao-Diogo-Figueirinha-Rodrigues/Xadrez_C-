@@ -16,6 +16,7 @@ namespace chess {
         }
 
         public override bool[,] PossibleMoves() {
+            // Improvement: See if is possible implement another for instead of 4 for
 
             bool[,] moves = new bool[8, 8];
             int l = base.position.line;
@@ -25,10 +26,12 @@ namespace chess {
             for (int i = 1; i < 8; i++) {
                 if (l + i < 8 && r + i < 8) {
                     if (board.ShowPosition(l + i, r + i) == null) {
-                        moves[l + i, r + i] = true;
+                        if (base.board.TryMove(this, new Position(l + i, r + i))) 
+                            moves[l + i, r + i] = true;
                     } else {
                         if (board.ShowPosition(l + i, r + i).color != base.color) {
-                            moves[l + i, r + i] = true;
+                            if (base.board.TryMove(this, new Position(l + i, r + i))) 
+                                moves[l + i, r + i] = true;
                             break;
                         } else break;
                     }
@@ -39,20 +42,22 @@ namespace chess {
                 if (l + i < 8 && r - i >= 0) {
                     if (board.ShowPosition(l + i, r - i) != null) {
                         if (board.ShowPosition(l + i, r - i).color != base.color) {
-                            moves[l + i, r - i] = true;
+                            if (base.board.TryMove(this, new Position(l + i, r - i))) moves[l + i, r - i] = true;
                             break;
                         } else break;
-                    } else moves[l + i, r - i] = true;
+                    } else if (base.board.TryMove(this, new Position(l + i, r - i))) moves[l + i, r - i] = true;
                 }
             }
             //Up and right
             for (int i = 1; i < 8; i++) {
                 if (l - i >= 0 && r + i < 8) {
                     if (board.ShowPosition(l - i, r + i) == null) {
-                        moves[l - i, r + i] = true;
+                        if (base.board.TryMove(this, new Position(l - i, r + i))) 
+                            moves[l - i, r + i] = true;
                     } else {
                         if (board.ShowPosition(l - i, r + i).color != base.color) {
-                            moves[l - i, r + i] = true;
+                            if (base.board.TryMove(this, new Position(l - i, r + i))) 
+                                moves[l - i, r + i] = true;
                             break;
                         } else break;
                     }
@@ -63,10 +68,13 @@ namespace chess {
                 if (l - i >= 0 && r - i >= 0) {
                     if (board.ShowPosition(l - i, r - i) != null) {
                         if (board.ShowPosition(l - i, r - i).color != base.color) {
-                            moves[l - i, r - i] = true;
+                            if (base.board.TryMove(this, new Position(l - i, r - i))) 
+                                moves[l - i, r - i] = true;
                             break;
                         } else break;
-                    } else moves[l - i, r - i] = true;
+                    }
+                    else if (base.board.TryMove(this, new Position(l - i, r - i)))
+                            moves[l - i, r - i] = true;
                 }
             }
 

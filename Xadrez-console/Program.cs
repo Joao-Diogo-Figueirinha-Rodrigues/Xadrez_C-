@@ -17,6 +17,12 @@ namespace Xadrez_console {
                 try {
                     Console.WriteLine();
                     Console.WriteLine(game);
+                    if (game.check == false) {
+                        ConsoleColor aux = Console.ForegroundColor;
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("King under check");
+                        Console.ForegroundColor = aux;
+                    }
                     Console.Write("Introduza a peça a mover: ");
                     string v = Console.ReadLine().ToUpper();  
                     string[] pos = v.Split(",");

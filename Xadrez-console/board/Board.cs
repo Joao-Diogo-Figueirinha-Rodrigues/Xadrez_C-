@@ -47,7 +47,7 @@ namespace board {
             } else if (IsAvaiable(p, position) == 1) {
                 EatPiece(p, position);
             } else {
-                throw new PositionException("Position is not empty!");
+                throw new PositionException("Position is not avaiable!");
             }
         }
 
@@ -75,8 +75,8 @@ namespace board {
         // Verify if a position is avaiable
         private int IsAvaiable(Piece piece, Position position) {
             bool[,] moves = piece.PossibleMoves();
-            if (moves[position.line, position.row]==true) {
-                if ( ShowPosition(position) != null && ShowPosition(position).color != piece.color)
+            if (moves[position.line, position.row] == true) {
+                if (ShowPosition(position) != null && ShowPosition(position).color != piece.color)
                     return 1;
                 else return 0;
             } else {
@@ -99,7 +99,7 @@ namespace board {
 
         // Shows the pieces that where eated
         public void ShowEated(List<Piece> list) {
-            foreach(Piece piece in list) {
+            foreach (Piece piece in list) {
                 Console.Write(piece + " ");
             }
         }
@@ -111,6 +111,43 @@ namespace board {
             this.InsertPiece(p);
             p.numberOfMoves++;
         }
+
+        public Piece FindBlackKing() {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (ShowPosition(i, j) is King && ShowPosition(i, j).color == Color.Black)
+                        return ShowPosition(i, j);
+                }
+            }
+            return null;
+        }
+
+        public Piece FindWhiteKing() {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (ShowPosition(i, j) is King && ShowPosition(i, j).color == Color.White)
+                        return ShowPosition(i, j);
+                }
+            }
+            return null;
+        }
+        //Implementaion: Use ShowPosition
+        // Tries a move with the possibility of check
+        public bool TryMove(Piece piece, Position position) {
+            Piece aux = null;
+            if (this.piece[position.line, position.row] != null) 
+                aux = this.piece[position.line, position.row];
+            this.piece[position.line, position.row] = piece;
+            this.piece[piece.position.line, piece.position.row] = null;
+            bool verify;
+            if (piece.color == Color.Black)
+                verify = CheckMate.PossibleKingMove(FindBlackKing(), FindBlackKing().position);
+            else verify = CheckMate.PossibleKingMove(FindWhiteKing(), FindWhiteKing().position);
+            this.piece[position.line, position.row] = aux;
+            this.piece[piece.position.line, piece.position.row] = piece;
+            return verify;
+        }
+
 
     }
 }

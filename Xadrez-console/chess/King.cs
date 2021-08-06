@@ -20,7 +20,7 @@ namespace chess {
 
             for (int i = -1; i <= 1; i++) {
                 for (int j = -1; j <= 1; j++) {
-                    
+
                     if (!(i == 0 && i == j)) {
                         if (board.ValidatePosition(position.line + i, position.row + j)) {
                             if (board.ShowPosition(position.line + i, position.row + j) != null) {
@@ -36,7 +36,7 @@ namespace chess {
                     }
                 }
             }
-           
+
             return moves;
         }
     }

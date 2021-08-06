@@ -22,14 +22,14 @@ namespace chess {
             int l = base.position.line;
             int r = base.position.row;
 
-            for (int i = -2; i <=2; i++) {
+            for (int i = -2; i <= 2; i++) {
                 for (int j = -2; j <= 2; j++) {
-                    if(i!=j && i != -j && i != 0 && j != 0 && board.ValidatePosition(l + i,r + j)) {
+                    if (i != j && i != -j && i != 0 && j != 0 && board.ValidatePosition(l + i, r + j)) {
                         if (board.ShowPosition(l + i, r + j) != null) {
                             if (board.ShowPosition(l + i, r + j).color != base.color) {
-                                moves[l + i, r + j] = true;
+                                if (base.board.TryMove(this, new Position(l + i, r + j))) moves[l + i, r + j] = true;
                             }
-                        } else moves[l + i, r + j] = true;
+                        } else if (base.board.TryMove(this, new Position(l + i, r + j))) moves[l + i, r + j] = true;
                     }
                 }
             }

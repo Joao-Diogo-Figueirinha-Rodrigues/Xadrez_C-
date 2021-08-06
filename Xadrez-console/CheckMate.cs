@@ -9,7 +9,7 @@ namespace chess {
         public static bool PossibleKingMove(Piece piece, Position position) {
             // Tower and queen
             //Down
-            for (int i = position.line; i < 8; i++) {
+            for (int i = position.line+1; i < 8; i++) {
                 if (piece.board.ShowPosition(i, position.row) != null) {
                     if (piece.board.ShowPosition(i, position.row).color != piece.color) {
                         if (piece.board.ShowPosition(i, position.row) is Tower ||
@@ -21,7 +21,7 @@ namespace chess {
                 }
             }
             //Up
-            for (int i = position.line; i >= 0; i--) {
+            for (int i = position.line-1; i >= 0; i--) {
                 if (piece.board.ShowPosition(i, position.row) != null) {
                     if (piece.board.ShowPosition(i, position.row).color != piece.color) {
                         if (piece.board.ShowPosition(i, position.row) is Tower ||
@@ -33,7 +33,7 @@ namespace chess {
                 }
             }
             // Right
-            for (int i = position.row; i < 8; i++) {
+            for (int i = position.row+1; i < 8; i++) {
                 if (piece.board.ShowPosition(position.line, i) != null) {
                     if (piece.board.ShowPosition(position.line, i).color != piece.color) {
                         if (piece.board.ShowPosition(position.line, i) is Tower ||
@@ -45,7 +45,7 @@ namespace chess {
                 }
             }
             // Left
-            for (int i = position.row; i >= 0; i--) {
+            for (int i = position.row-1; i >= 0; i--) {
                 if (piece.board.ShowPosition(position.line, i) != null) {
                     if (piece.board.ShowPosition(position.line, i).color != piece.color) {
                         if (piece.board.ShowPosition(position.line, i) is Tower ||
@@ -62,7 +62,7 @@ namespace chess {
                     if (l == 0 || r == 0) {
                         continue;
                     } else {
-                        for (int i = position.line + l, j = position.row + r; i >= 0 && j >= 0; i--, j--) {
+                        for (int i = position.line + l, j = position.row + r; i >= 0 && j >= 0 && i <8 && j<8; i+=l, j+=r) {
                             if (piece.board.ValidatePosition(i, j)) {
                                 if (piece.board.ShowPosition(i, j) != null) {
                                     if (piece.board.ShowPosition(i, j).color != piece.color) {
@@ -89,7 +89,7 @@ namespace chess {
                             if (piece.board.ShowPosition(position.line + i, position.row + j).color != piece.color && piece.board.ShowPosition(position.line + i, position.row + j) is Horse) {
                                 return false;
                             }
-                        } 
+                        }
                     }
                 }
             }
