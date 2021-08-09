@@ -30,6 +30,12 @@ namespace board {
             VerifyPosition(position);
             return piece[position.line, position.row];
         }
+        // Overload of the previous method
+        public Piece ShowPosition(ChessPosition pos) {
+            Position position = pos.ToPosition();
+            VerifyPosition(position);
+            return piece[position.line, position.row];
+        }
 
         // Insert a piece in the board
         public void InsertPiece(Piece newPiece) {
@@ -38,17 +44,59 @@ namespace board {
 
         //Move a specific piece
         public void MovePiece(Piece p, Position position) {
-            bool[,] moves = p.PossibleMoves();
             if (IsAvaiable(p, position) == 0) {
-                piece[p.position.line, p.position.row] = null;
-                p.position = position;
-                this.InsertPiece(p);
-                p.numberOfMoves++;
+                if (p is King && (p.position.row == position.row + 2 || p.position.row == position.row - 2)) Castling(p, position);
+                else if (p is Pawn && VerifyEnPassant(p, position)) EnPassant(p, position);
+                else {
+                    piece[p.position.line, p.position.row] = null;
+                    p.position = position;
+                    this.InsertPiece(p);
+                    p.numberOfMoves++;
+                    if (p is Pawn && (p.position.line == 0 || p.position.line == 7)) Promotion(p);
+                }
             } else if (IsAvaiable(p, position) == 1) {
                 EatPiece(p, position);
+                if (p is Pawn && (p.position.line == 0 || p.position.line == 7)) Promotion(p);
             } else {
                 throw new PositionException("Position is not avaiable!");
             }
+        }
+        // Special move castling
+        private void Castling(Piece piece, Position position) {
+            if (position.row == piece.position.row + 2) {
+                MoveSpecial(ShowPosition(piece.position.line, piece.position.row + 3), new Position(position.line, piece.position.row + 1));
+                MoveSpecial(piece, position);
+            } else {
+                MoveSpecial(ShowPosition(piece.position.line, piece.position.row - 4), new Position(position.line, piece.position.row - 1));
+                MoveSpecial(piece, position);
+            }
+
+        }
+        //Special move promotion
+        private void Promotion(Piece p) {
+            piece[p.position.line, p.position.row] = null;
+            Piece q = new Queen(p.position, p.color, this);
+            p.position = null;
+            InsertPiece(q);
+        }
+
+        //Special move en passant
+        private void EnPassant(Piece piece, Position position) {
+            if (piece.color == Color.White) {
+                EatPiece(piece, new Position(position.line + 1, position.row));
+                MoveSpecial(piece, position);
+            } else {
+                EatPiece(piece, new Position(position.line - 1, position.row));
+                MoveSpecial(piece, position);
+            }
+        }
+
+        // Verify if it's possible to make an en passent
+        private bool VerifyEnPassant(Piece piece, Position position) {
+            if (position.row != piece.position.row &&
+            ShowPosition(position) == null)
+                return true;
+            else return false;
         }
 
         // Verify if a position is avaiable
@@ -93,7 +141,7 @@ namespace board {
                 WhiteEated.Add(aux);
             } else BlackEated.Add(aux);
             this.piece[position.line, position.row] = null;
-            if (p is Pawn) PawnsEat(p, position);
+            if (p is Pawn) MoveSpecial(p, position);
             else MovePiece(p, position);
         }
 
@@ -104,8 +152,8 @@ namespace board {
             }
         }
 
-        // Method invoqued after a pawn eat a piece
-        private void PawnsEat(Piece p, Position position) {
+        // Method invoqued after a pawn eat a piece or a special move
+        private void MoveSpecial(Piece p, Position position) {
             piece[p.position.line, p.position.row] = null;
             p.position = position;
             this.InsertPiece(p);
@@ -135,7 +183,7 @@ namespace board {
         // Tries a move with the possibility of check
         public bool TryMove(Piece piece, Position position) {
             Piece aux = null;
-            if (this.piece[position.line, position.row] != null) 
+            if (this.piece[position.line, position.row] != null)
                 aux = this.piece[position.line, position.row];
             this.piece[position.line, position.row] = piece;
             this.piece[piece.position.line, piece.position.row] = null;
@@ -148,6 +196,26 @@ namespace board {
             return verify;
         }
 
+        // Verify if a Piece as Possible moves
+        public bool AvaiableMove(Piece piece) {
+            bool[,] moves = piece.PossibleMoves();
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (moves[i, j]) return true;
+                }
+            }
+            return false;
+        }
 
+        // Verify if is CheckMate
+        public bool VerifyCheckMate(Color color) {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (ShowPosition(i, j) != null && ShowPosition(i, j).color != color)
+                        if (AvaiableMove(ShowPosition(i, j))) return true;
+                }
+            }
+            return false;
+        }
     }
 }

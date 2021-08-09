@@ -13,7 +13,7 @@ namespace Xadrez_console {
 
 
             int i = 0;
-            while (game.end) {
+            while (game.checkMate) {
                 try {
                     Console.WriteLine();
                     Console.WriteLine(game);
@@ -26,12 +26,11 @@ namespace Xadrez_console {
                     Console.Write("Introduza a peça a mover: ");
                     string v = Console.ReadLine().ToUpper();  
                     string[] pos = v.Split(",");
-
                     char row = char.Parse(pos[0]) ;
                     int line = int.Parse(pos[1]);
 
-                    ChessPosition cp = new ChessPosition(row, line);
-                    Position firstPosition = cp.ToPosition();
+                    ChessPosition firstPosition = new ChessPosition(row, line);
+                    game.AvaiablePiece(game.board.ShowPosition(firstPosition.ToPosition()));
                     Console.Clear();
                     BoardFunctions.Show(game.board, game.board.ShowPosition(firstPosition));
 
@@ -42,8 +41,7 @@ namespace Xadrez_console {
                     row = char.Parse(pos[0]);
                     line = int.Parse(pos[1]);
 
-                    cp = new ChessPosition(row, line);
-                    Position lastPosition = cp.ToPosition();
+                    ChessPosition lastPosition = new ChessPosition(row, line);
 
                     game.PlayTurn(game.board.ShowPosition(firstPosition), lastPosition);
                     Console.Clear();
@@ -77,7 +75,10 @@ namespace Xadrez_console {
                 }
 
             }
-
+            ConsoleColor auxi = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            game.Winner();
+            Console.ForegroundColor = auxi;    
         }
     }
 }

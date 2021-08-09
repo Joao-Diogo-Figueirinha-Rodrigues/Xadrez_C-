@@ -20,6 +20,49 @@ namespace chess {
             int ml = base.position.line;
             int mr = base.position.row;
 
+            //Moves for en Passant
+            if (color == Color.White) {
+                if (position.line == 3) {
+                    Piece p;
+                    //Left
+                    if (board.ValidatePosition(ml, mr - 1)) {
+                        p = board.ShowPosition(ml, mr - 1);
+                        if (p != null && p is Pawn && p.color != this.color && p.numberOfMoves == 1) {
+                            if (base.board.TryMove(this, new Position(ml - 1, mr - 1)))
+                                moves[ml - 1, mr - 1] = true;
+                        }
+                    }
+                    //Right
+                    if (board.ValidatePosition(ml, mr + 1)) {
+                        p = board.ShowPosition(ml, mr + 1);
+                        if (p != null && p is Pawn && p.color != this.color && p.numberOfMoves == 1) {
+                            if (base.board.TryMove(this, new Position(ml - 1, mr + 1)))
+                                moves[ml - 1, mr + 1] = true;
+                        }
+                    }
+                }
+            } else {
+                if (position.line == 4) {
+                    Piece p;
+                    //Left
+                    if (board.ValidatePosition(ml, mr - 1)) {
+                        p = board.ShowPosition(ml, mr - 1);
+                        if (p != null && p is Pawn && p.color != this.color && p.numberOfMoves == 1) {
+                            if (base.board.TryMove(this, new Position(ml + 1, mr - 1)))
+                                moves[ml + 1, mr - 1] = true;
+                        }
+                    }
+                    //Right
+                    if (board.ValidatePosition(ml, mr + 1)) {
+                        p = board.ShowPosition(ml, mr + 1);
+                        if (p != null && p is Pawn && p.color != this.color && p.numberOfMoves == 1) {
+                            if (base.board.TryMove(this, new Position(ml + 1, mr + 1)))
+                                moves[ml + 1, mr + 1] = true;
+                        }
+                    }
+                }
+            }
+            //Movements to eat
             if (base.color == Color.White) {
                 //left Eat
                 if (ml - 1 >= 0 && mr - 1 >= 0) {
@@ -33,13 +76,13 @@ namespace chess {
                 if (ml - 1 >= 0 && mr + 1 < 8) {
                     if (board.ShowPosition(ml - 1, mr + 1) != null &&
                         board.ShowPosition(ml - 1, mr + 1).color == Color.Black) {
-                        if (base.board.TryMove(this, new Position(ml - 1, mr + 1))) 
+                        if (base.board.TryMove(this, new Position(ml - 1, mr + 1)))
                             moves[ml - 1, mr + 1] = true;
                     }
                 }
             } else {
                 //left Eat
-                if (ml + 1 <8 && mr - 1 >= 0) {
+                if (ml + 1 < 8 && mr - 1 >= 0) {
                     if (board.ShowPosition(ml + 1, mr - 1) != null &&
                         board.ShowPosition(ml + 1, mr - 1).color == Color.White) {
                         if (base.board.TryMove(this, new Position(ml + 1, mr - 1)))
@@ -47,7 +90,7 @@ namespace chess {
                     }
                 }
                 // Rigth Eat
-                if (ml + 1 <8 && mr + 1 < 8) {
+                if (ml + 1 < 8 && mr + 1 < 8) {
                     if (board.ShowPosition(ml + 1, mr + 1) != null &&
                         board.ShowPosition(ml + 1, mr + 1).color == Color.White) {
                         if (base.board.TryMove(this, new Position(ml + 1, mr + 1)))
@@ -68,7 +111,7 @@ namespace chess {
                     if (board.ShowPosition(ml + 1, mr) != null) return moves;
                     if (base.board.TryMove(this, new Position(ml + 1, mr))) moves[ml + 1, mr] = true;
                     if (board.ShowPosition(ml + 2, mr) != null) return moves;
-                    if (base.board.TryMove(this, new Position(ml +2, mr))) moves[ml + 2, mr] = true;
+                    if (base.board.TryMove(this, new Position(ml + 2, mr))) moves[ml + 2, mr] = true;
                 }
                 // Other Moves
             } else {
@@ -80,6 +123,7 @@ namespace chess {
                     if (base.board.TryMove(this, new Position(ml + 1, mr))) moves[ml + 1, mr] = true;
                 }
             }
+
             return moves;
         }
     }

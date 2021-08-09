@@ -36,7 +36,21 @@ namespace chess {
                     }
                 }
             }
-
+            //small castling
+            if (numberOfMoves == 0 && CheckMate.PossibleKingMove(this, this.position)) {
+                if (board.ShowPosition(position.line, position.row + 3) is Tower &&
+                    board.ShowPosition(position.line, position.row + 3).numberOfMoves == 0)
+                    if (board.ShowPosition(position.line, position.row + 1) == null &&
+                        board.ShowPosition(position.line, position.row + 2) == null)
+                        moves[position.line, position.row + 2] = true;
+                // Large castling
+                if (board.ShowPosition(position.line, position.row - 4) is Tower &&
+                    board.ShowPosition(position.line, position.row - 4).numberOfMoves == 0)
+                    if (board.ShowPosition(position.line, position.row - 1) == null &&
+                        board.ShowPosition(position.line, position.row - 2) == null &&
+                        board.ShowPosition(position.line, position.row - 3) == null)
+                        moves[position.line, position.row - 2] = true;
+            }
             return moves;
         }
     }

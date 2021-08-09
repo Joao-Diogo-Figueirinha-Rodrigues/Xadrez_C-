@@ -15,8 +15,15 @@ namespace board {
                 Console.Write(8 - i + "| ");
                 for (int j = 0; j < board.rows; j++) {
                     piece = board.ShowPosition(i, j);
-                    if (piece == null) Console.Write("- ");
-                    else {
+                    if (piece == null) {
+                        if ((i + j) % 2 == 0) {
+                            ConsoleColor aux = Console.ForegroundColor;
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.Write("- ");
+                            Console.ForegroundColor = aux;
+                        }
+                        else Console.Write("- ");
+                    } else {
                         PrintPiece(piece); // Possible improvement (aula 164)
                     }
                     if (j == board.rows - 1) Console.Write("|");
